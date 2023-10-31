@@ -93,10 +93,17 @@ Ref: "Book"."authorId" > "Author"."id"
 1. Install Express and create a server with two main routers: `/authors` and `/books`.
 1. Create the following `/authors` routes. These routes should use the [Prisma Client CRUD operations](https://www.prisma.io/docs/concepts/components/prisma-client/crud) to read and write from the database.
    - `GET /authors` - returns an array of all authors
-   - `GET /authors/:id` - returns a single author with the specified id
    - `POST /authors` - creates a new author with the information provided in the request body
+   - `GET /authors/:id` - returns a single author with the specified id
    - `PUT /authors/:id` - overwrites the author with the information provided in the request body
    - `DELETE /authors/:id` - deletes the author with the specified id
-1. Create the same routes for `/books`.
+1. Add the following `/authors` routes; these routes handle the relationship between authors and books.
+   - `GET /authors/:id/books` - get all books written by the specified author
+   - `POST /authors/:id/books` - creates a new book as provided in the request body with the specified author
+1. Create the following `/books` routes.
+   - `GET /books` - returns an array of all books
+   - `GET /books/:id` - returns a single book with the specified id
+   - `PUT /books/:id` - overwrites the book with the information provided in the request body
+   - `DELETE /books/:id` - deletes the book with the specified id
 
 You now have a fully working CRUD API!
