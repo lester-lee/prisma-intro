@@ -1,4 +1,7 @@
 {
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "devDependencies": {
     "prisma": "^5.5.2"
   },
