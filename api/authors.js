@@ -3,7 +3,7 @@ module.exports = router;
 
 const prisma = require('../prisma');
 
-/** Returns an array of all authors in database */
+/** Returns an array of all authors in database. */
 router.get('/', async (req, res, next) => {
   try {
     const authors = await prisma.author.findMany();
@@ -51,7 +51,7 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-/** Returns a single author with the specified id */
+/** Returns a single author with the specified id. */
 router.get('/:id', async (req, res, next) => {
   try {
     const id = +req.params.id;
@@ -112,7 +112,7 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-/** Deletes the author with the specified id */
+/** Deletes the author with the specified id. */
 router.delete('/:id', async (req, res, next) => {
   // This is a very similar pattern to the PUT route above.
   try {
@@ -129,6 +129,61 @@ router.delete('/:id', async (req, res, next) => {
     await prisma.author.delete({ where: { id } });
 
     res.sendStatus(204);
+  } catch {
+    next();
+  }
+});
+
+/** Returns all books written by the author with the specified id. */
+router.get('/:id/books', async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+
+    // Check if author exists
+    const author = await prisma.author.findUnique({ where: { id } });
+    if (!author) {
+      return next({
+        status: 404,
+        message: `Could not find author with id ${id}.`,
+      });
+    }
+
+    const books = await prisma.book.findMany({ where: { authorId: id } });
+
+    res.json(books);
+  } catch {
+    next();
+  }
+});
+
+/** Creates a new book for the author with the specified id. */
+router.post('/:id/books', async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+
+    // Check if author exists
+    const author = await prisma.author.findUnique({ where: { id } });
+    if (!author) {
+      return next({
+        status: 404,
+        message: `Could not find author with id ${id}.`,
+      });
+    }
+
+    // Validate request body
+    const { title } = req.body;
+    if (!title) {
+      return next({
+        status: 400,
+        message: 'Book must have a title.',
+      });
+    }
+
+    const book = await prisma.book.create({
+      data: { title, author: { connect: { id } } },
+    });
+
+    res.json(book);
   } catch {
     next();
   }
