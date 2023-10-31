@@ -1,8 +1,14 @@
 {
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
   "prisma": {
     "seed": "node prisma/seed.js"
   },
   "devDependencies": {
+    "nodemon": "^3.0.1",
     "prisma": "^5.5.2"
   },
   "dependencies": {
